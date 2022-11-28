@@ -5,6 +5,7 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -12,6 +13,8 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { AccessTokenGuard } from './guards/accessToken.guard';
+import { RefreshTokenGuard } from './guards/refreshToken.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -26,21 +29,31 @@ export class AuthController {
     return this.authService.authGoogle(token, res);
   }
 
-  @Post('login')
-  async login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
+  @Post('sign-in')
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.login(dto, res);
   }
 
-  // @Post('login/verify')
-  // async loginAuthWithCode(
-  //   @Body() dto: LoginDto,
-  //   @Res({ passthrough: true }) res: Response,
-  // ) {
-  //   return this.authService.loginAuthWithCode(dto, res);
-  // }
+  @UsePipes(new ValidationPipe())
+  @Post('test')
+  async test(@Body() dto: LoginDto) {
+    return 'HELLO';
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('logout')
+  @HttpCode(200)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const user = req.user['id'];
+
+    return this.authService.logout(user, res);
+  }
 
   @UsePipes(new ValidationPipe())
-  @Post('register')
+  @Post('sign-up')
   async register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
   }

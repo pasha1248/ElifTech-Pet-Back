@@ -5,7 +5,7 @@ export class RegisterDto {
   @IsEmail()
   email: string;
 
-  @MinLength(8, { message: 'The password must be longer than 6 characters' })
+  @MinLength(8, { message: 'The password must be longer than 8 characters' })
   @Matches(REGEX.PASSWORD_RULE, {
     message: 'The password must contain uppercase and lowercase letters',
   })

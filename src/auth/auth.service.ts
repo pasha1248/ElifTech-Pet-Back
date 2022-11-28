@@ -63,10 +63,8 @@ export class AuthService {
       const tokens = await this.getTokens(newUser['id'], newUser['email']);
       await this.updateRt(newUser.id, tokens.refresh_token);
 
-      res.cookie('tokenRefresh', tokens.refresh_token, {
-        maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
-        httpOnly: true,
-      });
+      await this.setCookie(tokens, res);
+
       return {
         user: userCreate,
         tokens,
@@ -96,11 +94,19 @@ export class AuthService {
     return user;
   }
 
-  async login(dto: LoginDto) {
+  async login(dto: LoginDto, res: Response) {
     const user = await this.validateUser(dto);
+
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRt(user.id, tokens.refresh_token);
+
+    console.log(user, tokens);
+
+    await this.setCookie(tokens, res);
+
     return {
-      user: user,
-      accessToken: user.id,
+      user: { id: user.id, email: user.email },
+      tokens: tokens,
     };
   }
 
@@ -111,7 +117,7 @@ export class AuthService {
       throw new BadRequestException('Email already exists');
     }
     const salt = await genSalt(3);
-    const newUser = await this.userRepository.create({
+    const newUser = this.userRepository.create({
       firstName: dto.firstName,
       lastName: dto.lastName,
       email: dto.email,
@@ -128,6 +134,15 @@ export class AuthService {
       user,
       tokens,
     };
+  }
+
+  async logout(userId: string, res: Response): Promise<void> {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    user.refreshTokenHash = '';
+    await this.userRepository.save(user);
+
+    res.clearCookie('tokenRefresh');
+    res.clearCookie('tokenAccess');
   }
 
   async validateUser(dto: LoginDto) {
@@ -184,5 +199,22 @@ export class AuthService {
     await this.userRepository.save(user);
 
     return user.refreshTokenHash;
+  }
+
+  async setCookie(
+    tokens: { refresh_token: string; access_token: string },
+    res: Response,
+  ): Promise<void> {
+    const [at, rt] = await Promise.all([
+      res.cookie('tokenRefresh', tokens.refresh_token, {
+        maxAge: 60 * 1000,
+        httpOnly: true,
+      }),
+
+      res.cookie('tokenAccess', tokens.access_token, {
+        maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
+        httpOnly: true,
+      }),
+    ]);
   }
 }
