@@ -37,4 +37,7 @@ export class UserEntity extends Base {
 
   @Column({ nullable: true })
   avatarPath: string;
+
+  @Column({ default: '' })
+  refreshPasswordCode: string;
 }

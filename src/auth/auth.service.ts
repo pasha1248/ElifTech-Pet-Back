@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -13,6 +15,8 @@ import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
+import { MailerService } from '@nestjs-modules/mailer';
+import { verifyCodeDto } from './dto/verifyCode.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +24,7 @@ export class AuthService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async authGoogle(token: string, res: Response) {
@@ -216,5 +221,81 @@ export class AuthService {
         httpOnly: true,
       }),
     ]);
+  }
+
+  async refreshToken(userId: string, rt: string, res: Response) {
+    const user = await this.userRepository.findOneBy({ id: userId });
+
+    const rtMatches = await compare(rt, user.refreshTokenHash);
+    if (!rtMatches) {
+      throw new UnauthorizedException('Refresh denied');
+    }
+
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRt(user.id, tokens.refresh_token);
+    await this.setCookie(tokens, res);
+
+    return {
+      user: user,
+    };
+  }
+
+  async forgotPassword(dto: { email: string }): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Invalid email');
+    }
+    const code = await this.generateNewCode(dto.email);
+    await this.sendMessageForRefreshPassword(dto.email, code);
+
+    await this.userRepository.save(user);
+  }
+
+  async generateNewCode(email: string) {
+    setTimeout(async () => {
+      const user = await this.userRepository.findOne({
+        where: { email: email },
+      });
+      user.refreshPasswordCode = Math.random().toFixed(6).slice(2);
+      return await this.userRepository.save(user);
+    }, 61000);
+
+    return Math.random().toFixed(6).slice(2);
+  }
+
+  async sendMessageForRefreshPassword(email: string, code: string) {
+    await this.mailerService
+      .sendMail({
+        to: email,
+        subject: 'Code for authentication',
+        template: './authTemplate',
+        context: {
+          link: process.env.FRONTEND_URL,
+          email: code,
+        },
+      })
+      .catch((e) => {
+        console.log(e);
+        throw new HttpException(
+          `Error with sending`,
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      });
+  }
+
+  async verifyCode(dto: verifyCodeDto) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: dto.email,
+        refreshPasswordCode: dto.code,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Invalid Verify Code');
+    }
   }
 }

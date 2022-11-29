@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Post,
   Req,
@@ -13,6 +14,7 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { verifyCodeDto } from './dto/verifyCode.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
 
@@ -37,14 +39,8 @@ export class AuthController {
     return this.authService.login(dto, res);
   }
 
-  @UsePipes(new ValidationPipe())
-  @Post('test')
-  async test(@Body() dto: LoginDto) {
-    return 'HELLO';
-  }
-
   @UseGuards(AccessTokenGuard)
-  @Post('logout')
+  @Get('logout')
   @HttpCode(200)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const user = req.user['id'];
@@ -58,12 +54,26 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  // @UseGuards(AccessTokenGuard)
-  // @Post('logout')
-  // @HttpCode(200)
-  // async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-  //   const user = req.user['id'];
+  @UseGuards(RefreshTokenGuard)
+  @Get('refresh')
+  @HttpCode(200)
+  async refreshToken(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { tokenRefresh } = req.cookies;
+    const user = req.user['id'];
 
-  //   return this.authService.logout(user, res);
-  // }
+    return this.authService.refreshToken(user, tokenRefresh, res);
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() dto: { email: string }) {
+    return this.authService.forgotPassword(dto);
+  }
+
+  @Post('verify-code')
+  async verifyCode(@Body() dto: verifyCodeDto) {
+    return this.authService.verifyCode(dto);
+  }
 }
