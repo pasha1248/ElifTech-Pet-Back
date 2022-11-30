@@ -249,6 +249,7 @@ export class AuthService {
       throw new BadRequestException('Invalid email');
     }
     const code = await this.generateNewCode(dto.email);
+    user.refreshPasswordCode = String(code);
     await this.sendMessageForRefreshPassword(dto.email, code);
 
     await this.userRepository.save(user);
