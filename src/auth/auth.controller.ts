@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Patch,
   Post,
   Req,
   Res,
@@ -13,6 +14,7 @@ import {
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { refreshPasswordDto } from './dto/refreshPassword.dto';
 import { RegisterDto } from './dto/register.dto';
 import { verifyCodeDto } from './dto/verifyCode.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
@@ -75,5 +77,10 @@ export class AuthController {
   @Post('verify-code')
   async verifyCode(@Body() dto: verifyCodeDto) {
     return this.authService.verifyCode(dto);
+  }
+
+  @Patch('refresh-password')
+  async changePassword(@Body() dto: refreshPasswordDto) {
+    return this.authService.refreshPassword(dto);
   }
 }

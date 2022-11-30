@@ -17,6 +17,7 @@ import { Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import { MailerService } from '@nestjs-modules/mailer';
 import { verifyCodeDto } from './dto/verifyCode.dto';
+import { refreshPasswordDto } from './dto/refreshPassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -298,5 +299,20 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('Invalid Verify Code');
     }
+  }
+
+  async refreshPassword(dto: refreshPasswordDto) {
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User is not found');
+    }
+
+    const salt = await genSalt(3);
+    user.password = await hash(dto.password, salt);
+
+    return await this.userRepository.save(user);
   }
 }
