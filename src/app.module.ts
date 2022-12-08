@@ -9,6 +9,8 @@ import typeormConfig from './config/typeorm.config';
 import { join } from 'path';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { CommentModule } from './comment/comment.module';
+import { ArticleModule } from './article/article.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     }),
     AuthModule,
     UserModule,
+    CommentModule,
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

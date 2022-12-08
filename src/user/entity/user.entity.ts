@@ -1,3 +1,4 @@
+import { ArticleEntity } from 'src/article/article.entity';
 import { Base } from 'src/config/base';
 import {
   Column,
@@ -8,6 +9,7 @@ import {
   ManyToMany,
   OneToMany,
 } from 'typeorm';
+import { SubscriptionEntity } from '../subscription.entity';
 
 @Entity('user')
 export class UserEntity extends Base {
@@ -40,4 +42,19 @@ export class UserEntity extends Base {
 
   @Column({ default: '' })
   refreshPasswordCode: string;
+
+  @Column({ default: 0, name: 'subscribers_count' })
+  subscribersCount?: number;
+
+  @Column({ default: '', type: 'text' })
+  description: string;
+
+  @OneToMany(() => ArticleEntity, (article) => article.user)
+  articles: ArticleEntity[];
+
+  @OneToMany(() => SubscriptionEntity, (sub) => sub.fromUser)
+  subscriptions: SubscriptionEntity[];
+
+  @OneToMany(() => SubscriptionEntity, (sub) => sub.toChannel)
+  subscribers: SubscriptionEntity[];
 }
