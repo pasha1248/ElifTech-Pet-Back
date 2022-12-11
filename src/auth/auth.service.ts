@@ -43,10 +43,7 @@ export class AuthService {
       const tokens = await this.getTokens(userData.id, userData.email);
       await this.updateRt(userData.id, tokens.refresh_token);
 
-      res.cookie('tokenRefresh', tokens.refresh_token, {
-        maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
-        httpOnly: true,
-      });
+      await this.setCookie(tokens, res);
 
       return {
         user: userData,

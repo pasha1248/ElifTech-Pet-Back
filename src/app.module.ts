@@ -11,6 +11,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { CommentModule } from './comment/comment.module';
 import { ArticleModule } from './article/article.module';
+import { CarModule } from './car/car.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ArticleModule } from './article/article.module';
     UserModule,
     CommentModule,
     ArticleModule,
+    CarModule,
   ],
   controllers: [AppController],
   providers: [AppService],

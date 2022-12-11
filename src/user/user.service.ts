@@ -25,12 +25,15 @@ export class UserService {
       where: {
         id,
       },
+
       relations: {
         articles: true,
         subscriptions: {
           toChannel: true,
         },
+        cars: true,
       },
+
       order: {
         createdAt: 'DESC',
       },

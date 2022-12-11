@@ -20,11 +20,8 @@ export class ArticleEntity extends Base {
   @Column({ default: '', type: 'text' })
   description: string;
 
-  @Column({ default: '', type: 'text', name: 'video_path' })
+  @Column({ default: '', type: 'text' })
   videoPath: string;
-
-  @Column({ default: '', name: 'thumbnail_path' })
-  thumbnailPath: string;
 
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.articles)
   @JoinColumn({ name: 'user_id' })

@@ -1,4 +1,5 @@
 import { ArticleEntity } from 'src/article/article.entity';
+import { CarEntity } from 'src/car/entities/car.entity';
 import { Base } from 'src/config/base';
 import {
   Column,
@@ -57,4 +58,10 @@ export class UserEntity extends Base {
 
   @OneToMany(() => SubscriptionEntity, (sub) => sub.toChannel)
   subscribers: SubscriptionEntity[];
+
+  @OneToMany(() => CarEntity, (car) => car.subscribers)
+  carSubscriptions: CarEntity[];
+
+  @OneToMany(() => CarEntity, (car) => car.user)
+  cars: CarEntity[];
 }
