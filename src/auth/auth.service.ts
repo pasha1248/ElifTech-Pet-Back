@@ -210,12 +210,12 @@ export class AuthService {
   ): Promise<void> {
     const [at, rt] = await Promise.all([
       res.cookie('tokenRefresh', tokens.refresh_token, {
-        maxAge: 60 * 1000,
+        maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
         httpOnly: true,
       }),
 
       res.cookie('tokenAccess', tokens.access_token, {
-        maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
+        maxAge: 60 * 1000 * 20,
         httpOnly: true,
       }),
     ]);

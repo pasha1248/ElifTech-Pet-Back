@@ -11,10 +11,10 @@ export class CreateCarDto {
   description: string;
 
   @IsString()
-  photoPath: string;
+  type: string;
 
   @IsString()
-  generation?: string;
+  photoPath: string[];
 
   @IsString()
   yearOfPurchase: string;
@@ -39,4 +39,10 @@ export class CreateCarDto {
 
   @IsString()
   motor: string;
+
+  @IsString()
+  driveUnit: string;
+
+  @IsString()
+  mileage: string;
 }

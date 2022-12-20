@@ -2,6 +2,7 @@ import { CommentEntity } from 'src/comment/comment.entity';
 import { Base } from 'src/config/base';
 import { UserEntity } from 'src/user/entity/user.entity';
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import { CarsPhotoEntity } from './photo-car.entity';
 
 @Entity('car')
 export class CarEntity extends Base {
@@ -16,12 +17,6 @@ export class CarEntity extends Base {
 
   @Column({ default: '', type: 'text' })
   description: string;
-
-  @Column({ default: '', type: 'text', name: 'video_path' })
-  photoPath: string;
-
-  @Column()
-  generation: string;
 
   @Column()
   yearOfPurchase: string;
@@ -42,10 +37,19 @@ export class CarEntity extends Base {
   engineCapacityLiters: string;
 
   @Column()
-  distance: string;
+  transmission: string;
+
+  @Column()
+  driveUnit: string;
+
+  @Column()
+  mileage: string;
 
   @Column()
   motor: string;
+
+  @OneToMany(() => CarsPhotoEntity, (photos) => photos.carOwner)
+  photosPath: CarsPhotoEntity[];
 
   @ManyToOne(() => UserEntity, (car: UserEntity) => car.cars)
   user: UserEntity;

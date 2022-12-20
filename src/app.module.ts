@@ -12,6 +12,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { CommentModule } from './comment/comment.module';
 import { ArticleModule } from './article/article.module';
 import { CarModule } from './car/car.module';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { CarModule } from './car/car.module';
     CommentModule,
     ArticleModule,
     CarModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
