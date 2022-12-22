@@ -1,11 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
 import { FindOptionsWhereProperty, ILike, Repository } from 'typeorm';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { CarEntity } from './entities/car.entity';
 import { CarsPhotoEntity } from './entities/photo-car.entity';
 
+@UseGuards(AccessTokenGuard)
 @Injectable()
 export class CarService {
   constructor(

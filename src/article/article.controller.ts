@@ -12,6 +12,7 @@ import {
   Query,
   Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,7 +20,9 @@ import {
 import { ArticleService } from './acticle.service';
 import { ArticleDto } from './article.dto';
 import { Request, Response } from 'express';
+import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
 
+@UseGuards(AccessTokenGuard)
 @Controller('article')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}

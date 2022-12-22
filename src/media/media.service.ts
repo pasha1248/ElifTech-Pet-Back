@@ -44,8 +44,10 @@ export class MediaService {
     return;
   }
 
-  async deleteCarPhoto(photoId: string) {
+  async deleteCarPhoto(photoId: string, photoUrl: string) {
+    const avatarPublicId = photoUrl.split('/').pop().split('.')[0];
+
     const photo = await this.carsPhotoRepository.delete(photoId);
-    await this.cloudinaryService.destroyImage(photoId);
+    await this.cloudinaryService.destroyImage(avatarPublicId);
   }
 }

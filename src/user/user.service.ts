@@ -31,7 +31,7 @@ export class UserService {
         subscriptions: {
           toChannel: true,
         },
-        cars: true,
+        cars: { photosPath: true },
       },
 
       order: {

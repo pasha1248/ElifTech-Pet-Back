@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 
+@UseGuards(AccessTokenGuard)
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}
