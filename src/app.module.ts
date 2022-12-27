@@ -13,6 +13,9 @@ import { CommentModule } from './comment/comment.module';
 import { ArticleModule } from './article/article.module';
 import { CarModule } from './car/car.module';
 import { MediaModule } from './media/media.module';
+import { SearchModule } from './search/search.module';
+import { ChatModule } from './chat/chat.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -48,6 +51,9 @@ import { MediaModule } from './media/media.module';
     ArticleModule,
     CarModule,
     MediaModule,
+    SearchModule,
+    ChatModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

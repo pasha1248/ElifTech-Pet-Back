@@ -27,11 +27,6 @@ import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
-  @Get()
-  async getAll(@Query('searchTerm') searchTerm?: string) {
-    return this.articleService.getAll(searchTerm);
-  }
-
   @Get('most-popular')
   async getMostPopularByViews() {
     return this.articleService.getMostPopulByViews();

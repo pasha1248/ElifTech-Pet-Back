@@ -76,7 +76,6 @@ export class ArticleService {
     return this.articleRepository.find({
       where: {
         ...options,
-        isPublic: true,
       },
       order: {
         createdAt: 'DESC',

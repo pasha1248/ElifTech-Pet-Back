@@ -38,6 +38,7 @@ export class UserService {
         createdAt: 'DESC',
       },
     });
+    
     if (!user) throw new NotFoundException('user Is not Found');
     return user;
   }

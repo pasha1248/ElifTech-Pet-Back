@@ -125,6 +125,7 @@ export class AuthService {
       lastName: dto.lastName,
       email: dto.email,
       password: await hash(dto.password, salt),
+      avatarPath: 'http://cdn-icons-png.flaticon.com/512/147/147142.png',
       refreshTokenHash: ' ',
     });
 

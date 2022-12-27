@@ -1,5 +1,6 @@
 import { ArticleEntity } from 'src/article/article.entity';
 import { CarEntity } from 'src/car/entities/car.entity';
+import { ChatEntity } from 'src/chat/entity/chat.entity';
 import { Base } from 'src/config/base';
 import {
   Column,
@@ -49,6 +50,9 @@ export class UserEntity extends Base {
 
   @Column({ default: '', type: 'text' })
   description: string;
+
+  @OneToMany(() => ChatEntity, (chat) => chat.receiverId)
+  chats: ChatEntity[];
 
   @OneToMany(() => ArticleEntity, (article) => article.user)
   articles: ArticleEntity[];
