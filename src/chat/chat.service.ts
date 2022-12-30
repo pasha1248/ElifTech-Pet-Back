@@ -27,11 +27,11 @@ export class ChatService {
     const existingConversation = await this.chatRepo.findOne({
       where: [
         {
-          senderId: senderId,
+          senderId: { id: senderId },
           receiverId: { id: newReceiverId },
         },
         {
-          senderId: newReceiverId,
+          senderId: { id: newReceiverId },
           receiverId: { id: senderId },
         },
       ],
@@ -40,7 +40,7 @@ export class ChatService {
       return await this.findChat(senderId, newReceiverId, res);
     }
     const newChat = this.chatRepo.create({
-      senderId,
+      senderId: { id: senderId },
       receiverId: { id: newReceiverId },
     });
 
@@ -53,33 +53,24 @@ export class ChatService {
     const chats = await this.chatRepo.find({
       where: [
         {
-          senderId: userId,
+          senderId: { id: userId },
         },
         {
           receiverId: { id: userId },
         },
       ],
-      relations: { messages: true, receiverId: true },
+      relations: { messages: true, receiverId: true, senderId: true },
     });
 
     return res.status(200).send(chats);
   }
 
-  async findChat(userId: string, receiverId: string, res: Response) {
-    console.log(receiverId);
+  async findChat(userId: string, newchatId: string, res: Response) {
+    console.log(newchatId);
     return res.status(200).send(
       await this.chatRepo.findOne({
-        where: [
-          {
-            senderId: userId,
-            receiverId: { id: receiverId },
-          },
-          {
-            senderId: receiverId,
-            receiverId: { id: userId },
-          },
-        ],
-        relations: { messages: true, receiverId: true },
+        where: { id: newchatId },
+        relations: { messages: true, receiverId: true, senderId: true },
       }),
     );
   }

@@ -16,6 +16,8 @@ import { MediaModule } from './media/media.module';
 import { SearchModule } from './search/search.module';
 import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
+import { GatewayModule } from './gateway/gateway.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -54,6 +56,8 @@ import { MessageModule } from './message/message.module';
     SearchModule,
     ChatModule,
     MessageModule,
+    GatewayModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

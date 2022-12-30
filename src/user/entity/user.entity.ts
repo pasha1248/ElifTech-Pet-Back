@@ -54,6 +54,9 @@ export class UserEntity extends Base {
   @OneToMany(() => ChatEntity, (chat) => chat.receiverId)
   chats: ChatEntity[];
 
+  @OneToMany(() => ChatEntity, (chat) => chat.senderId)
+  chatsSender: ChatEntity[];
+
   @OneToMany(() => ArticleEntity, (article) => article.user)
   articles: ArticleEntity[];
 

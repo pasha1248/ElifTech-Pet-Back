@@ -5,13 +5,13 @@ import { ChatEntity } from 'src/chat/entity/chat.entity';
 
 @Entity('message')
 export class MessageEntity extends Base {
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   text: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   chatId: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   senderId: string;
 
   @ManyToOne(() => ChatEntity, (chat) => chat.messages)

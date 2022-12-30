@@ -12,19 +12,26 @@ export class MessageService {
   ) {}
 
   async createNewMessage(userId: string, dto: CreateMessageDto) {
+    console.log(userId, dto.senderId);
     if (userId !== dto.senderId) {
       throw new HttpException('No access', HttpStatus.BAD_REQUEST);
     }
 
-    const newMessage = this.messageRepo.create(dto);
+    const newMessage = this.messageRepo.create({
+      ...dto,
+      chatOwner: { id: dto.chatId },
+    });
 
-    return await this.messageRepo.save(dto);
+    const saveMessage = await this.messageRepo.save(newMessage);
+
+    return {
+      message: saveMessage,
+    };
   }
 
   async deleteMessage(userId: string, messageId: string) {
     return await this.messageRepo.delete({
       id: messageId,
-      chatOwner: { senderId: userId },
     });
   }
 }

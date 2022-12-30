@@ -2,10 +2,10 @@ import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 
 export class CreateMessageDto {
   @IsString()
-  senderId: string;
+  chatId: string;
 
   @IsString()
-  chatId: string;
+  senderId: string;
 
   @IsString()
   text: string;

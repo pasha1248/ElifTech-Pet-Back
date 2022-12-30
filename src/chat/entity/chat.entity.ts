@@ -13,8 +13,8 @@ import { MessageEntity } from 'src/message/message.entity';
 
 @Entity('chat')
 export class ChatEntity extends Base {
-  @Column()
-  senderId: string;
+  @ManyToOne(() => UserEntity, (chat) => chat.chatsSender)
+  senderId: UserEntity;
 
   @ManyToOne(() => UserEntity, (chat) => chat.chats)
   receiverId: UserEntity;
