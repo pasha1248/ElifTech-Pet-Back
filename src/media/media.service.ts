@@ -4,33 +4,52 @@ import { path } from 'app-root-path';
 import { ensureDir, writeFile } from 'fs-extra';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CarsPhotoEntity } from 'src/car/entities/photo-car.entity';
 import { Repository } from 'typeorm';
+import { CoursePhotoEntity } from 'src/course/entities/photo-course.entity';
 
 @Injectable()
 export class MediaService {
   constructor(
     private readonly cloudinaryService: CloudinaryService,
-    @InjectRepository(CarsPhotoEntity)
-    private readonly carsPhotoRepository: Repository<CarsPhotoEntity>,
+    @InjectRepository(CoursePhotoEntity)
+    private readonly carsPhotoRepository: Repository<CoursePhotoEntity>,
   ) {}
   async saveMedia(
     mediaFile: Express.Multer.File,
     folder: string,
     id: string,
     isMain: boolean,
-  ): Promise<CarsPhotoEntity> {
-    if (folder === 'videos') {
-      const uploadFolder = `${path}/uploads/${folder}`;
-      await ensureDir(uploadFolder);
+  ): Promise<CoursePhotoEntity> {
+    if (folder === 'promotionalVideos') {
+      console.log(folder, 'video');
 
-      await writeFile(
-        `${uploadFolder}/${mediaFile.originalname}`,
-        mediaFile.buffer,
+      const video = true;
+      const photo = false;
+      const savePhoto = await this.cloudinaryService.uploadImage(
+        mediaFile,
+        video,
+        photo,
       );
+      console.log(savePhoto);
+
+      const savePhotoRepo = this.carsPhotoRepository.create({
+        path: savePhoto.url,
+        isMain: isMain ? isMain : false,
+      });
+      const save = await this.carsPhotoRepository.save(savePhotoRepo);
+
+      return save;
     }
-    if (folder === 'carPhoto') {
-      const savePhoto = await this.cloudinaryService.uploadImage(mediaFile);
+    if (folder === 'coverPhoto') {
+      console.log(folder, 'photo');
+      const video = false;
+      const photo = true;
+      const savePhoto = await this.cloudinaryService.uploadImage(
+        mediaFile,
+        video,
+        photo,
+      );
+      console.log(savePhoto);
 
       const savePhotoRepo = this.carsPhotoRepository.create({
         path: savePhoto.url,
@@ -44,10 +63,15 @@ export class MediaService {
     return;
   }
 
-  async deleteCarPhoto(photoId: string, photoUrl: string) {
+  async deleteCarPhoto(type: string, photoId: string, photoUrl: string) {
     const avatarPublicId = photoUrl.split('/').pop().split('.')[0];
 
     const photo = await this.carsPhotoRepository.delete(photoId);
-    await this.cloudinaryService.destroyImage(avatarPublicId);
+
+    if ((type = 'photo')) {
+      return await this.cloudinaryService.destroyImage(avatarPublicId);
+    }
+
+    return await this.cloudinaryService.destroyImage(avatarPublicId);
   }
 }

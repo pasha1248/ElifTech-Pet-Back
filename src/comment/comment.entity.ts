@@ -3,9 +3,9 @@ import { Column, Entity, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
 import { ArticleEntity } from 'src/article/article.entity';
 import { Base } from 'src/config/base';
 import { UserEntity } from 'src/user/entity/user.entity';
-import { CarEntity } from 'src/car/entities/car.entity';
+import { CourseEntity } from 'src/course/entities/Course.entity';
 
-@Entity('comment')
+@Entity('comment1')
 export class CommentEntity extends Base {
   @Column({ type: 'text' })
   message: string;
@@ -18,7 +18,7 @@ export class CommentEntity extends Base {
   @JoinColumn({ name: 'article_id' })
   article: ArticleEntity;
 
-  @ManyToOne(() => CarEntity, (car) => car.comments)
+  @ManyToOne(() => CourseEntity, (course) => course.commentsCourse)
   @JoinColumn({ name: 'car_id' })
-  car: CarEntity[];
+  course: CourseEntity[];
 }

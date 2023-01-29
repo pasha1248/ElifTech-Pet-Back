@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { genSalt, hash } from 'bcryptjs';
 import { UserEntity } from './entity/user.entity';
+import { onlineUserEntity } from './entity/onlineUser.entity';
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,8 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(SubscriptionEntity)
     private readonly subscriptionEntity: Repository<SubscriptionEntity>,
+    @InjectRepository(onlineUserEntity)
+    private readonly onlineUserEntity: Repository<onlineUserEntity>,
   ) {}
 
   // by-id
@@ -31,14 +34,14 @@ export class UserService {
         subscriptions: {
           toChannel: true,
         },
-        cars: { photosPath: true },
+        courses: true,
       },
 
       order: {
         createdAt: 'DESC',
       },
     });
-    
+
     if (!user) throw new NotFoundException('user Is not Found');
     return user;
   }

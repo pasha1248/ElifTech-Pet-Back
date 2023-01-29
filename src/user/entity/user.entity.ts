@@ -1,7 +1,7 @@
 import { ArticleEntity } from 'src/article/article.entity';
-import { CarEntity } from 'src/car/entities/car.entity';
 import { ChatEntity } from 'src/chat/entity/chat.entity';
 import { Base } from 'src/config/base';
+import { CourseEntity } from 'src/course/entities/Course.entity';
 import {
   Column,
   Entity,
@@ -66,9 +66,9 @@ export class UserEntity extends Base {
   @OneToMany(() => SubscriptionEntity, (sub) => sub.toChannel)
   subscribers: SubscriptionEntity[];
 
-  @OneToMany(() => CarEntity, (car) => car.subscribers)
-  carSubscriptions: CarEntity[];
+  @OneToMany(() => CourseEntity, (car) => car.subscribers)
+  courseSubscriptions: CourseEntity[];
 
-  @OneToMany(() => CarEntity, (car) => car.user)
-  cars: CarEntity[];
+  @OneToMany(() => CourseEntity, (couse) => couse.user)
+  courses: CourseEntity[];
 }

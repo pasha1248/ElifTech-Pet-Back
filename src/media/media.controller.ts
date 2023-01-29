@@ -36,9 +36,10 @@ export class MediaController {
 
   @Get()
   async delete(
+    @Query('type') type: string,
     @Query('photoId') photoId: string,
     @Query('photoUrl') photoUrl: string,
   ) {
-    return this.mediaService.deleteCarPhoto(photoId, photoUrl);
+    return this.mediaService.deleteCarPhoto(type, photoId, photoUrl);
   }
 }

@@ -11,13 +11,13 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { CommentModule } from './comment/comment.module';
 import { ArticleModule } from './article/article.module';
-import { CarModule } from './car/car.module';
 import { MediaModule } from './media/media.module';
 import { SearchModule } from './search/search.module';
 import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
 import { GatewayModule } from './gateway/gateway.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { CourseModule } from './course/course.module';
 
 @Module({
   imports: [
@@ -51,7 +51,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     UserModule,
     CommentModule,
     ArticleModule,
-    CarModule,
+    CourseModule,
     MediaModule,
     SearchModule,
     ChatModule,

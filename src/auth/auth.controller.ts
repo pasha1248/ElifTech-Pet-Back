@@ -83,4 +83,9 @@ export class AuthController {
   async changePassword(@Body() dto: refreshPasswordDto) {
     return this.authService.refreshPassword(dto);
   }
+
+  @Post('check')
+  async check(@Body() any) {
+    console.log(any);
+  }
 }
