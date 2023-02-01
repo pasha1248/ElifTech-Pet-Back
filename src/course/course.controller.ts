@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
@@ -28,13 +29,14 @@ export class CourseController {
   }
 
   @Get()
-  findAll() {
-    return this.CourseService.findAll();
+  findAll(@Query('count') count?: number) {
+    return this.CourseService.findAll(count);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.CourseService.findOne(id);
+  @Get('my-courses')
+  findOne(@Req() req: Request) {
+    const id = req.user?.['id'];
+    return this.CourseService.findCourseByOwner(id);
   }
 
   @Patch(':id')

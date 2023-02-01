@@ -30,7 +30,7 @@ export class CourseEntity extends Base {
   @Column({ default: '' })
   uploadDataVideo: string;
 
-  @ManyToOne(() => UserEntity, (Course: UserEntity) => Course.courses)
+  @ManyToOne(() => UserEntity, (Course: UserEntity) => Course.createdCourses)
   user: UserEntity;
 
   @OneToMany(() => CommentEntity, (comment: CommentEntity) => comment.course)

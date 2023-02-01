@@ -4,10 +4,13 @@ import { SearchController } from './search.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleEntity } from 'src/article/article.entity';
 import { UserEntity } from 'src/user/entity/user.entity';
+import { CourseEntity } from 'src/course/entities/Course.entity';
 
 @Module({
   controllers: [SearchController],
   providers: [SearchService],
-  imports: [TypeOrmModule.forFeature([ArticleEntity, UserEntity])],
+  imports: [
+    TypeOrmModule.forFeature([ArticleEntity, UserEntity, CourseEntity]),
+  ],
 })
 export class SearchModule {}

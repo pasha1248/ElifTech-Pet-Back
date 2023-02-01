@@ -34,7 +34,12 @@ export class UserService {
         subscriptions: {
           toChannel: true,
         },
-        courses: true,
+        createdCourses: {
+          user: true,
+        },
+        availableCourses: {
+          user: true,
+        },
       },
 
       order: {

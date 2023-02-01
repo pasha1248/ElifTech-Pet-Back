@@ -70,5 +70,8 @@ export class UserEntity extends Base {
   courseSubscriptions: CourseEntity[];
 
   @OneToMany(() => CourseEntity, (couse) => couse.user)
-  courses: CourseEntity[];
+  createdCourses: CourseEntity[];
+
+  @OneToMany(() => CourseEntity, (couse) => couse.user)
+  availableCourses: CourseEntity[];
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArticleEntity } from 'src/article/article.entity';
+import { CourseEntity } from 'src/course/entities/Course.entity';
 import { UserEntity } from 'src/user/entity/user.entity';
 import { FindOptionsWhereProperty, ILike, Repository } from 'typeorm';
 
@@ -11,6 +12,8 @@ export class SearchService {
     private readonly articleRepository: Repository<ArticleEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(CourseEntity)
+    private readonly courseEntity: Repository<CourseEntity>,
   ) {}
 
   async getAll(searchTerm?: string) {
@@ -22,7 +25,7 @@ export class SearchService {
       };
     }
 
-    const article = await this.articleRepository.find({
+    const course = await this.courseEntity.find({
       where: {
         ...options,
       },
@@ -31,7 +34,7 @@ export class SearchService {
       },
       relations: {
         user: true,
-        comments: {
+        commentsCourse: {
           user: true,
         },
       },
@@ -49,13 +52,13 @@ export class SearchService {
       firstName: ILike(`%${searchTerm}%`),
       lastName: ILike(`%${searchTerm}%`),
     };
-    console.log(options);
+    // console.log(options);
 
     const userFirstName = await this.userRepository.find({
-      where: {
-        firstName: ILike(`%${searchTerm}%`),
-        //   lastName: ILike(`%${searchTerm}%`),
-      },
+      where: [
+        { firstName: ILike(`%${searchTerm}%`) },
+        { lastName: ILike(`%${searchTerm}%`) },
+      ],
       order: {
         createdAt: 'DESC',
       },
@@ -67,25 +70,26 @@ export class SearchService {
         avatarPath: true,
       },
     });
-    const userLastName = await this.userRepository.find({
-      where: {
-        //   firstName: ILike(`%${searchTerm}%`),
-        lastName: ILike(`%${searchTerm}%`),
-      },
-      order: {
-        createdAt: 'DESC',
-      },
-      relations: {},
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        avatarPath: true,
-      },
-    });
+    // const userLastName = await this.userRepository.find({
+    //   where: {
+    //     //   firstName: ILike(`%${searchTerm}%`),
+    //     lastName: ILike(`%${searchTerm}%`),
+    //   },
+    //   order: {
+    //     createdAt: 'DESC',
+    //   },
+    //   relations: {},
+    //   select: {
+    //     id: true,
+    //     firstName: true,
+    //     lastName: true,
+    //     avatarPath: true,
+    //   },
+    // });
 
-    const response = [...userFirstName, ...userLastName, article];
+    const response = [...userFirstName, ...course];
+    console.log('response', response);
 
-    return response;
+    return [...userFirstName, ...course];
   }
 }

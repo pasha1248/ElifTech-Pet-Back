@@ -23,6 +23,7 @@ export class JwtRtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     });
   }
   private static extractJwt(req: Request): string | null {
+    console.log(req.cookies);
     if (req.cookies && 'tokenRefresh' in req.cookies) {
       return req.cookies.tokenRefresh;
     }

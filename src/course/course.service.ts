@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
-import { FindOptionsWhereProperty, ILike, Repository } from 'typeorm';
+import { FindOptionsWhereProperty, ILike, Like, Repository } from 'typeorm';
 import { CreateCourseDto } from './dto/create-Course.dto';
 import { UpdateCourseDto } from './dto/update-Course.dto';
 import { CourseEntity } from './entities/Course.entity';
@@ -37,13 +37,37 @@ export class CourseService {
     return Course.id;
   }
 
-  async findAll() {
-    return `This action returns all Course`;
+  async findAll(query) {
+    const take = query?.take || 10;
+    const skip = query?.skip || 0;
+    const keyword = query?.keyword || '';
+    const [result, total] = await this.CourseRepository.findAndCount({
+      where: { name: Like('%' + keyword + '%') },
+      order: { name: 'DESC' },
+      take: take,
+      skip: skip,
+      relations: {
+        user: true,
+      },
+      select: {
+        user: {
+          id: true,
+
+          avatarPath: true,
+        },
+      },
+    });
+
+    return {
+      data: result,
+      count: total,
+    };
   }
 
-  async findOne(userId: string) {
-    const Course = await this.CourseRepository.findOne({
-      where: { id: userId },
+  async findCourseByOwner(userId: string) {
+    const Course = await this.CourseRepository.find({
+      where: { user: { id: userId } },
+      relations: { user: true },
     });
 
     return Course;
