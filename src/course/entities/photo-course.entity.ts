@@ -10,6 +10,6 @@ export class CoursePhotoEntity extends Base {
   @Column()
   path: string;
 
-  // @ManyToOne(() => CourseEntity, (Courses) => Courses.photosPath)
-  // CourseOwner: CourseEntity;
+  @ManyToOne(() => CourseEntity, (Courses) => Courses.uploadDataPhoto)
+  CourseOwner: CourseEntity;
 }

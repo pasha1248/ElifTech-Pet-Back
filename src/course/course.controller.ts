@@ -34,9 +34,15 @@ export class CourseController {
   }
 
   @Get('my-courses')
-  findOne(@Req() req: Request) {
+  findAllMyCourses(@Req() req: Request) {
     const id = req.user?.['id'];
     return this.CourseService.findCourseByOwner(id);
+  }
+
+  @Get(':id')
+  findOneCourse(@Param('id') id: string, @Req() req: Request) {
+    const userId = req.user?.['id'];
+    return this.CourseService.findCoutseById(id, userId);
   }
 
   @Patch(':id')

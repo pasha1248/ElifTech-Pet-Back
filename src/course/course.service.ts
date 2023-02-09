@@ -73,6 +73,14 @@ export class CourseService {
     return Course;
   }
 
+  async findCoutseById(id: string, userId: string) {
+    const course = this.CourseRepository.findOne({
+      where: { id: id },
+      relations: { sections: true },
+    });
+    return course;
+  }
+
   async update(id: number, updateCourseDto: UpdateCourseDto) {
     return `This action updates a #${id} Course`;
   }
